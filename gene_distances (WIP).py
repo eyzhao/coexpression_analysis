@@ -1,5 +1,5 @@
 ensemblFile= "mart_export.txt"
-outputFile= 'output.txt'
+outputFile= 'output1.txt'
 correlatedPairs="most_correlated_full.txt"
 
 geneName=[]
@@ -10,7 +10,6 @@ i=-1
 GeneNameChr={}	#'key'=gene name, 'value'=chromosome
 GeneNameDis={}	#'key'=gene name, 'value'=gene start site (bp)
 GeneCorrelatedPairs=[]	#Ordered list of each correlated pair
-GeneCorrelatedDistance=[]	#Ordered list of each pairs absolute distance
 GenePairDistance=[]
 output = open(outputFile, 'w')
 
@@ -24,6 +23,7 @@ for line in open(ensemblFile):
 	GeneNameDis[geneName]=row[2]
 
 #Check if two genes are on the same chromosome
+#input("Check1")
 
 for line in open(correlatedPairs):
 	row=line.strip().split("\t")
@@ -34,30 +34,26 @@ for line in open(correlatedPairs):
 	if geneA in GeneNameChr.keys():
 		if geneB in GeneNameChr.keys():
 			if GeneNameChr[geneA]==GeneNameChr[geneB]:	#check if the genes are on the same chromosome
-				genepair=(geneA,geneB)
-				GeneCorrelatedPairs.append(genepair)		#store genes on the same chromosome in a list
+				X= int(GeneNameDis[geneA])				
+				Y= int(GeneNameDis[geneB])
+				Dis= abs(X-Y)
+				genepair=(geneA,geneB,Dis)
+				#print(genepair)
+				#input("Check")
+				GenePairDistance.append(genepair)		#Create a nested tuple inside a larger list
+			else:
+				continue
+		else:
+			continue
 	else:
 		continue
 
-print(GeneCorrelatedPairs[0])
 
 
+input("Check")
 
-#find the distance between each correlated gene pair
-
-for item in GeneCorrelatedPairs:
-	geneA = item[0]
-	geneB = item[1]
-	X= int(GeneNameDis[geneA])
-	Y= int(GeneNameDis[geneB])
-	Dis= abs(X-Y)
-	GeneCorrelatedDistance.append(Dis)
-	
 #write the correlated gene pairs to an output file as a check
-i=-1
-for item in GeneCorrelatedPairs:
-	i+=1
-	ABDis = (item[0],item[1],GeneCorrelatedDistance[i])
-	GenePairDistance.append(ABDis)
-	output.write("{0}\t{1}\t{2}\n".format(item[0],item[1],GeneCorrelatedDistance[i]))
+
+for item in GenePairDistance:
+		output.write("{0}\t{1}\t{2}\n".format(item[0],item[1],item[2]))
 input("Done")
