@@ -39,8 +39,11 @@ for line in open(correlatedPairs):
 				Dis= abs(X-Y)
 				genepair=(geneA,geneB,Dis)
 				#print(genepair)
-				#input("Check")
-				GenePairDistance.append(genepair)		#Create a nested tuple inside a larger list
+				if Dis <= 10000:
+					#input("Check")
+					GenePairDistance.append(genepair)		#Create a nested tuple inside a larger list
+				else:
+					continue
 			else:
 				continue
 		else:
